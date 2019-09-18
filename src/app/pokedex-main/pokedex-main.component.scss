@@ -76,7 +76,7 @@
 .tabs__profile__text>h1 {
   margin: 0px;
   text-align: left;
-  font: Black 18px/20px Roboto;
+  font: #000000 18px/20px Roboto;
   letter-spacing: 1.8px;
   color: #611829;
   opacity: 1;
@@ -170,4 +170,46 @@
 
 .tabs__menu__spacer {
   flex: 1 1 auto;
+}
+
+@media only screen and (max-width: 599px) {
+  .tabs__button__tabgeneration__container {
+    display: inline-grid;
+  }
+  .mat-toolbar-row, .mat-toolbar-single-row {
+    white-space: wrap;
+  }
+  .tabs__button__tabgeneration--active {
+    width: 100%;
+  }
+  .tabs__button__tabgeneration--inactive {
+    width: 100%;
+    height: auto;
+  }
+  .tabs__profile__image__container {
+    width: 100%;
+    float: unset;
+  }
+  .tabs__profile__text {
+    width: 100%;
+    float: unset;
+    padding: 0px;
+  }
+  .tabs__profile__text > h1,
+  .tabs__profile__text > h2,
+  .tabs__profile__text > h3 {
+    text-align: center;
+  }
+  .mat-standard-chip {
+    width: 50%;
+  }
+  .tabs__profile__identity {
+    width: 100%;
+    float: unset;
+  }
+  .tabs__profile__info {
+    width: 100%;
+    margin-top: 20px;
+    float: unset;
+  }
 }
