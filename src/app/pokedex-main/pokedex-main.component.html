@@ -1,1 +1,58 @@
-<p>pokedex-main works!</p>
+<section class="tabs">
+  <button mat-button *ngFor="let button of generation; let i = index" (click)="generationChoosed(i)"
+    class="tabs__tabgeneration" [ngClass]="{
+        'tabs__tabgeneration--active': generation[i],
+        'tabs__tabgeneration--inactive': !generation[i]
+        }">
+    Geração {{ i + 1 }}
+  </button>
+  <ng-container *ngIf="(asyncTabs | async) === null">
+    Carregando tabs...
+  </ng-container>
+  <mat-tab-group (selectedTabChange)="activePokeOption($event.index)">
+    <mat-tab *ngFor="let tab of asyncTabs | async; let i = index">
+      <ng-template mat-tab-label>
+        <p class="tabs__textbutton">
+          POKE {{ i + 1 }}
+        </p>
+      </ng-template>
+
+      <div class="tabs__profile">
+        <div class="tabs__profile__identity">
+          <div class="tabs__profile__image__container">
+            <img class="tabs__profile__image" src="https://material.angular.io/assets/img/examples/shiba1.jpg" alt="" />
+          </div>
+          <div class="tabs__profile__text">
+            <h1>NOME EM INGLES</h1>
+            <h2>nome em japonês</h2>
+            <h3>GENUS</h3>
+            <mat-chip-list>
+              <mat-chip color="warn" selected>tipo A</mat-chip>
+              <mat-chip color="primary" selected>tipo B</mat-chip>
+            </mat-chip-list>
+          </div>
+        </div>
+
+        <div class="tabs__profile__info">
+          <div class="tabs__profile__info__code">#000</div>
+          <div class="tabs__profile__info__textArea">{{ textArea }}</div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <section>
+
+    <!--
+    <section class="tabs">
+      <button class="tabs tabs--tabgeneration tabs--tabgeneration-inactive">Geração 1</button>
+      <button class="tabs tabs--tabgeneration tabs--tabgeneration-active">Geração 2</button>
+
+      <button *ngFor="let item of pokeGenerations; let i = index" class="tabs tabs--tabpoke tabs--tabpoke-inactive">
+        <p>
+          {{ item }}
+        </p>
+      </button>
+
+      <h1>NOME EM INGLES</h1>
+    </section>
+-->

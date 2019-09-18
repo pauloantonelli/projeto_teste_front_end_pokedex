@@ -1,0 +1,144 @@
+.tabs {
+  width: 100%;
+  padding: 5px;
+}
+
+.tabs__tabgeneration {
+  width: 50%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+}
+
+.tabs__tabgeneration--active {
+  color: #611829;
+  background: #EEEEEE 0% 0% no-repeat padding-box;
+  ;
+  text-align: center;
+  font: bold 14px/19px Roboto;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.tabs__tabgeneration--inactive {
+  background: #FAFAFA 0% 0% no-repeat padding-box;
+  text-align: center;
+  font: medium 14px/19px Roboto;
+  letter-spacing: 1.4px;
+  color: #AAAAAA;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.tabs__textbutton {
+  letter-spacing: 1.4px;
+}
+
+.tabs__profile {
+  overflow: hidden;
+  width: 100%;
+  padding: 20px;
+  background: #FAFAFA 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.tabs__profile__identity {
+  width: 35%;
+  float: left;
+}
+
+.tabs__profile__image__container {
+  width: 25%;
+  float: left;
+}
+
+.tabs__profile__image {
+  width: 100%;
+  border-radius: 50px;
+}
+
+.tabs__profile__text {
+  width: 65%;
+  float: right;
+  padding: 0px 10px;
+}
+
+.tabs__profile__text>h1 {
+  margin: 0px;
+  text-align: left;
+  font: Black 18px/20px Roboto;
+  letter-spacing: 1.8px;
+  color: #611829;
+  opacity: 1;
+}
+
+.tabs__profile__text>h2 {
+  text-align: left;
+  font: medium Italic 16px/20px Roboto;
+  letter-spacing: 1.6px;
+  color: #924551;
+}
+
+.tabs__profile__text>h3 {
+  text-align: left;
+  font: medium 14px/20px Roboto;
+  letter-spacing: 1.4px;
+  color: #999999;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.tabs__profile__info {
+  width: 65%;
+  display: inline-flex;
+}
+
+.tabs__profile__info__code {
+  float: left;
+  padding: 0px 10px;
+  text-align: right;
+  font: 14px/20px Roboto;
+  font-weight: normal;
+  letter-spacing: 1.4px;
+  color: #999999;
+  opacity: 1;
+}
+
+.tabs__profile__info__textArea {
+  overflow-x: hidden;
+  overflow-y: auto;
+  float: right;
+  padding: 20px;
+  text-align: left;
+  font: 12px/14px Roboto;
+  font-weight: normal;
+  letter-spacing: 1.2px;
+  color: #999999;
+  text-transform: uppercase;
+  opacity: 1;
+  background: #EEEEEE 0% 0% no-repeat padding-box;
+  border-radius: 12px;
+}
+
+/*ajustes angular material*/
+.mat-tab-label-container {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  max-width: 100%;
+  text-align: center;
+  background-color: #EEEEEE;
+  border-left: 1px solid #CCCCCC;
+  border-right: 1px solid #CCCCCC;
+  opacity: 1;
+}
+
+.mat-ink-bar {
+  display: none;
+}
+
+.mat-tab-header {
+  border-bottom: unset;
+}
