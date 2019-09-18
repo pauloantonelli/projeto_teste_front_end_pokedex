@@ -1,20 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { Component, OnInit, ViewEncapsulation, AfterContentInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable, Observer, Subscription, fromEvent } from 'rxjs';
 
-export interface ExampleTab {
-  label: string;
-  content: string;
-}
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-export interface PokeGenerationsInterface {
-  pokeNumber: number;
-  pokeState: boolean;
-}
+import { PokeGenerationService } from '../core/services/poke-generation.service';
+import { PokeGenerationInterface } from '../core/models/poke-generation.interface';
+import { PokemonDataInterface } from '../core/models/pokemon-data.interface';
+import { PokemonSpritesInterface } from '../core/models/poke-sprites.inteface';
+import { PokemonSpecies } from '../core/models/poke-species.interface';
 
 @Component({
   selector: 'app-pokedex-main',
@@ -22,35 +13,71 @@ export interface PokeGenerationsInterface {
   styleUrls: ['./pokedex-main.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PokedexMainComponent implements OnInit {
+export class PokedexMainComponent implements OnInit, OnDestroy {
 
-  public generation = Array(2).fill(false);
-  public pokeGenerations = Array(7).fill(false);
+  public subscription: Subscription;
+  public generation: PokeGenerationInterface;
+  public generationState: boolean[] = [];
 
-  public asyncTabs: Observable<ExampleTab[]>;
-  public backgroundColors = '';
+  public pokemonSpecies: Observable<PokemonSpecies[]>;
 
-  public textArea = 'Lorem ipsum platea primis inceptos dictumst sapien non, suspendisse sit in nisi senectus ornare dictum accumsan, ut nisl pretium tristique duis at. feugiat in hendrerit sodales auctor sollicitudin eros diam accumsan, tempor cubilia curae consequat non torquent ultricies rhoncus leo, interdum pretium ante accumsan litora phasellus bibendum. litora ligula augue diam vestibulum ac vel feugiat scelerisque felis, malesuada nisi aliquam interdum tellus neque feugiat eleifend ligula per, vivamus sociosqu purus ut potenti molestie dapibus volutpat. tortor faucibus commodo faucibus egestas libero sit litora, lobortis vel metus in sapien aliquam taciti, mollis accumsan fames scelerisque auctor justo, aptent nostra litora mi turpis pharetra, Lorem ipsum platea primis inceptos dictumst sapien non, suspendisse sit in nisi senectus ornare dictum accumsan, ut nisl pretium tristique duis at. feugiat in hendrerit sodales auctor sollicitudin eros diam accumsan, tempor cubilia curae consequat non torquent ultricies rhoncus leo, interdum pretium ante accumsan litora phasellus bibendum. litora ligula augue diam vestibulum ac vel feugiat scelerisque felis, malesuada nisi aliquam interdum tellus neque feugiat eleifend ligula per, vivamus sociosqu purus ut potenti molestie dapibus volutpat. tortor faucibus commodo faucibus egestas libero sit litora, lobortis vel metus in sapien aliquam taciti, mollis accumsan fames scelerisque auctor justo, aptent nostra litora mi turpis pharetra';
+  public pokemonChoosedData: PokemonDataInterface;
+  public pokemonChoosedSprites: PokemonSpritesInterface;
+  public pokemonChangeSprite = true;
 
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 1, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 2, color: 'lightgreen' },
-    { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
-    { text: 'Four', cols: 2, rows: 1, color: '#DDBDF1' },
-  ];
-  constructor() {
-    this.asyncTabs = new Observable((observer: Observer<any[]>) => {
-      setTimeout(() => {
-        observer.next(this.pokeGenerations);
-      }, 1000);
-    });
+  constructor(private pokeGenerationService: PokeGenerationService) { }
+
+  ngOnInit() {
+    this.getAllPokeGeneration();
   }
 
-  ngOnInit() { }
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   generationChoosed(choise: number) {
-    this.generation.fill(false);
-    this.generation[choise] = true;
+    this.generationState.fill(false);
+    this.generationState[choise] = true;
+    this.getChoosedPokeGeneration(choise + 1);
+  }
+
+  getAllPokeGeneration() {
+    this.subscription = this.pokeGenerationService.getAllPokeGeneration().subscribe(
+      (res) => {
+        this.generation = res;
+        this.generationState = Array(this.generation.count).fill(false);
+      }
+    );
+  }
+  getChoosedPokeGeneration(generation: number) {
+    this.subscription = this.pokeGenerationService.getChoosedPokeGeneration(generation).subscribe(
+      (res) => {
+        this.pokemonSpecies = new Observable((observer: Observer<any[]>) => {
+          // tslint:disable-next-line: no-string-literal
+          observer.next(res['pokemon_species']);
+        });
+      }
+    );
+  }
+  getPokemonData(urlData: string) {
+    this.subscription = this.pokeGenerationService.getPokemonData(urlData).subscribe(
+      (res) => {
+        this.pokemonChoosedData = res;
+        this.getPokemonSprites(res.id);
+      }
+    );
+  }
+  getPokemonSprites(pokemonID: number) {
+    this.subscription = this.pokeGenerationService.getPokemonSprites(pokemonID).subscribe(
+      (res) => {
+        this.pokemonChoosedSprites = res;
+      }
+    );
+  }
+  changeImageSprites() {
+    this.pokemonChangeSprite = !this.pokemonChangeSprite;
   }
 
   activePokeOption(matTabLabelNumber: number) {
@@ -62,10 +89,13 @@ export class PokedexMainComponent implements OnInit {
     matLabel.style.letterSpacing = '1.25px';
     matLabel.style.color = '#611829';
     matLabel.style.background = 'transparent linear-gradient(180deg, #EEEEEE 0%, #FAFAFA 100%) 0% 0% no-repeat padding-box';
+    matLabel.style.borderLeft = 'none';
+    matLabel.style.borderRight = 'none';
     matLabel.style.opacity = '1';
+    matLabel.style.padding = '0px 4px';
   }
   deactivePokeOption(matTabLabelNumber: number) {
-    for (let i = 0; i < this.pokeGenerations.length; i++) {
+    for (let i = 0; i < this.generation.results.length; i++) {
       if (i !== matTabLabelNumber) {
         const matLabel = document.getElementById(`mat-tab-label-0-${i}`);
         matLabel.style.textAlign = 'center';
@@ -74,7 +104,10 @@ export class PokedexMainComponent implements OnInit {
         matLabel.style.letterSpacing = '1.25px';
         matLabel.style.color = '#999999';
         matLabel.style.background = '#EEEEEE 0% 0% no-repeat padding-box';
+        matLabel.style.borderLeft = '1px solid #CCCCCC';
+        matLabel.style.borderRight = '1px solid #CCCCCC';
         matLabel.style.opacity = '1';
+        matLabel.style.padding = '0px 4px';
       }
     }
   }
